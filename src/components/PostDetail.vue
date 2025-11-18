@@ -25,8 +25,6 @@ const loadPost = async (id) => {
     const { loadMarkdownFiles } = await import("../utils/markdownLoader.js");
     const articles = await loadMarkdownFiles();
     const foundPost = articles.find((article) => article.id === id);
-    console.log(foundPost);
-
     post.value = foundPost;
     if (foundPost) {
       mdContent.value = foundPost.content;

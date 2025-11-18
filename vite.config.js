@@ -16,10 +16,5 @@ export default defineConfig({
     alias: {
       '@': '/src',
     },
-  },
-  inject:{
-    data:{
-      title:'星期wu~'
-    }
   }
 })

@@ -180,7 +180,7 @@ provide("blogPosts", blogPosts);
       class="site-sider"
     >
       <div class="logo">
-        <img src="@/assets/logo.jpg" alt="" />
+        <img src="/public/logo.jpg" alt="" />
         <span v-if="!collapsed">星期wu~</span>
       </div>
 

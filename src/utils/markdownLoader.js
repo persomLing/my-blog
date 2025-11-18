@@ -24,7 +24,7 @@ const htmlToPlainText = (html) => {
 }
 
 // 截断文本并添加省略号
-const truncateText = (text, maxLength = 100) => {
+const truncateText = (text, maxLength = 80) => {
   if (text.length <= maxLength) return text
   return text.substring(0, maxLength) + '...'
 }
