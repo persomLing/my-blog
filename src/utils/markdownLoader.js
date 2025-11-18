@@ -1,28 +1,6 @@
 // 加载所有 markdown 文件
 import _ from 'lodash'
 
-
-// 处理HTML格式的图片路径
-const processHtmlImages = (htmlContent) => {
-  // 正则匹配HTML img标签的src属性
-  return htmlContent.replace(/<img\s+src="(\.\.?\/.*?)"\s+/g, (match, path) => {
-    // 处理相对路径
-    let newPath = path
-    if (path.startsWith('./') || path.startsWith('../')) {
-      newPath = path.replace(/^\.\.\/?/, '')
-      newPath = `xqw-blog/src/assets/${newPath}`
-    }
-    return match.replace(path, newPath)
-  })
-}
-
-// 将HTML转换为纯文本
-const htmlToPlainText = (html) => {
-  const div = document.createElement('div')
-  div.innerHTML = html
-  return div.textContent || div.innerText || ''
-}
-
 // 截断文本并添加省略号
 const truncateText = (text, maxLength = 80) => {
   if (text.length <= maxLength) return text
@@ -162,5 +140,4 @@ const generateCategories = (articles) => {
 export { 
   loadMarkdownFiles, 
   generateCategories,
-  processHtmlImages, // 导出HTML图片处理函数
 }
