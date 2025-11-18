@@ -17,4 +17,9 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  inject:{
+    data:{
+      title:'星期wu~'
+    }
+  }
 })

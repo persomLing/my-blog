@@ -12,7 +12,7 @@
         <span class="post-category">{{ post.category }}</span>
       </div>
     </div>
-    <div class="post-excerpt">{{ post.excerpt }}</div>
+    <div class="post-excerpt" v-html="post.excerpt"></div>
     <div class="post-actions">
       <a
         :href="`#/post/${post.id}`"

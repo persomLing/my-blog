@@ -22,6 +22,8 @@ const filteredPosts = computed(() => {
 const loadContent = async () => {
   const { loadMarkdownFiles } = await import("../utils/markdownLoader.js");
   const articles = await loadMarkdownFiles();
+  console.log(articles);
+
   blogPosts.value = articles;
 };
 

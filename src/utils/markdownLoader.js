@@ -10,7 +10,7 @@ const processHtmlImages = (htmlContent) => {
     let newPath = path
     if (path.startsWith('./') || path.startsWith('../')) {
       newPath = path.replace(/^\.\.\/?/, '')
-      newPath = `/assets/${newPath}`
+      newPath = `xqw-blog/src/assets/${newPath}`
     }
     return match.replace(path, newPath)
   })
@@ -24,7 +24,7 @@ const htmlToPlainText = (html) => {
 }
 
 // 截断文本并添加省略号
-const truncateText = (text, maxLength = 50) => {
+const truncateText = (text, maxLength = 100) => {
   if (text.length <= maxLength) return text
   return text.substring(0, maxLength) + '...'
 }
@@ -32,7 +32,7 @@ const truncateText = (text, maxLength = 50) => {
 // 处理文章摘要（直接截断Markdown文本）
 const processExcerpt = (excerpt) => {
   // 移除Markdown格式，转换为纯文本
-  const plainText = excerpt.replace(/[#*`_[\]()]+/g, '')
+  const plainText = excerpt.replace(/<img\s+.*?\/?>/g, '').replace(/[#*`_[\]()]+/g, '')
   return truncateText(plainText)
 }
 
