@@ -215,7 +215,7 @@ provide("blogPosts", blogPosts);
 
 <style scoped lang="less">
 .layout-main {
-  // background-image: url("@/assets/b1.jpg");
+  background-image: url("@/assets/b1.jpg");
   background-size: cover;
 }
 
