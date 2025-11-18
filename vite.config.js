@@ -11,6 +11,7 @@ export default defineConfig({
       },
     },
   },
+  base: '/my-blog/', // 设置为GitHub仓库名
   resolve: {
     alias: {
       '@': '/src',
