@@ -1,4 +1,4 @@
-import{c as fe}from"./index-CxQRgADZ.js";const rp=`# 旅行日记
+import{c as fe}from"./index-B3thmD00.js";const rp=`# 旅行日记
 
 <img src="/xqw-blog/src/assets/blog/旅行_1.jpg" alt="真好玩" width="500" height="300" />
 
