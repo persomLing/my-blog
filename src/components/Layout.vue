@@ -20,6 +20,7 @@ import {
   FileTextOutlined,
   MailOutlined,
   MenuOutlined,
+  CloseOutlined,
 } from "@ant-design/icons-vue";
 
 // 导入Header组件
@@ -39,9 +40,20 @@ const blogPosts = ref([]);
 const currentCategory = ref(null);
 const openKeys = ref([]);
 const selectedKey = ref([]);
+const isMobile = ref(false);
+const mobileMenuVisible = ref(false);
 
 const router = useRouter();
 const route = useRoute();
+
+// 检测是否为移动设备
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+  // 移动设备默认收起侧边栏
+  if (isMobile.value) {
+    collapsed.value = true;
+  }
+};
 
 // 监听路由变化更新菜单选中状态
 watch(
@@ -136,6 +148,10 @@ const handleMenuClick = ({ key, keyPath, item }) => {
         break;
     }
   }
+  // 移动设备点击菜单后关闭菜单
+  if (isMobile.value) {
+    mobileMenuVisible.value = false;
+  }
 };
 
 // 处理目录展开/收起
@@ -163,9 +179,14 @@ const loadContent = async () => {
 // 组件挂载时加载内容
 onMounted(() => {
   loadContent();
+  checkMobile();
+  // 监听窗口大小变化
+  window.addEventListener("resize", checkMobile);
 });
 
-onUnmounted(() => {});
+onUnmounted(() => {
+  window.removeEventListener("resize", checkMobile);
+});
 
 // 提供blogPosts给子组件
 provide("blogPosts", blogPosts);
@@ -173,14 +194,17 @@ provide("blogPosts", blogPosts);
 
 <template>
   <Layout class="layout-main" style="min-height: 100vh">
+    <!-- 桌面端侧边栏 -->
     <Sider
+      v-if="!isMobile"
       v-model:collapsed="collapsed"
       :trigger="null"
       collapsible
       class="site-sider"
+      width="256"
     >
       <div class="logo">
-        <img src="/public/logo.jpg" alt="" />
+        <img src="/logo.jpg" alt="" />
         <span v-if="!collapsed">星期wu~</span>
       </div>
 
@@ -188,6 +212,7 @@ provide("blogPosts", blogPosts);
       <Menu
         mode="inline"
         v-model:openKeys="openKeys"
+        class="menu-box-1"
         v-model:selectedKeys="selectedKey"
         :items="mainMenuItems"
         @click="handleMenuClick"
@@ -203,13 +228,44 @@ provide("blogPosts", blogPosts);
 
     <Layout class="layout-content">
       <!-- 使用Header组件并传递blogPosts -->
-      <HeaderComponent :blog-posts="blogPosts" />
+      <HeaderComponent
+        :blog-posts="blogPosts"
+        :is-mobile="isMobile"
+        v-model:mobile-menu-visible="mobileMenuVisible"
+      />
+
       <Content class="site-content-wrapper">
         <div class="site-content">
           <slot></slot>
         </div>
       </Content>
     </Layout>
+
+    <!-- 移动端菜单弹窗 -->
+    <div
+      v-if="isMobile && mobileMenuVisible"
+      class="mobile-menu-overlay"
+      @click="mobileMenuVisible = false"
+    >
+      <div class="mobile-menu-content" @click.stop>
+        <div class="mobile-logo">
+          <img src="/logo.jpg" alt="" />
+          <span>星期wu~</span>
+        </div>
+        <Menu
+          mode="inline"
+          v-model:openKeys="openKeys"
+          v-model:selectedKeys="selectedKey"
+          :items="mainMenuItems"
+          @click="handleMenuClick"
+          @openChange="handleMenuOpenChange"
+        />
+        <CloseOutlined
+          class="mobile-menu-close"
+          @click="mobileMenuVisible = false"
+        />
+      </div>
+    </div>
   </Layout>
 </template>
 
@@ -251,9 +307,6 @@ provide("blogPosts", blogPosts);
 .site-sider {
   background: #cacaca56;
   position: relative;
-  :global(.ant-menu) {
-    background: #cacaca56;
-  }
   :global(.ant-menu-item-selected) {
     background-color: #e6f4ff73 !important;
     color: rgb(66, 107, 182) !important;
@@ -263,6 +316,10 @@ provide("blogPosts", blogPosts);
     ) {
     color: rgb(66, 107, 182) !important;
   }
+}
+
+.menu-box-1 {
+  background: #cacaca56 !important;
 }
 
 .site-header {
@@ -290,6 +347,9 @@ provide("blogPosts", blogPosts);
 .site-content-wrapper {
   overflow: visible;
   padding: 24px;
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
 }
 
 .site-content {
@@ -301,8 +361,81 @@ provide("blogPosts", blogPosts);
   background-color: rgba(239, 241, 224, 0.253);
   box-shadow: 0 2px 12px #9e9e9e67;
   border-radius: 12px;
-  // max-width: 1400px;
-  margin: 0 auto;
   width: 100%;
+  @media (max-width: 768px) {
+    padding: 16px;
+    height: calc(100vh - 96px);
+  }
+}
+
+// 移动端菜单弹窗
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+}
+
+.mobile-menu-content {
+  background: #fff;
+  width: 90%;
+  max-width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-bottom: 1px solid #f0f0f0;
+  img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+  }
+  span {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 12px;
+    white-space: nowrap;
+    // 颜色渐变
+    background: linear-gradient(90deg, #ec5fff, #feb47b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.mobile-menu-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.3s;
+  &:hover {
+    background: #f0f0f0;
+    color: #333;
+  }
 }
 </style>

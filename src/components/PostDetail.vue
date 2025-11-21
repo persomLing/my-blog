@@ -93,12 +93,21 @@ const goBack = () => {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
   border-radius: 8px 8px 0 0;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 }
 
 .post-title {
   font-size: 28px;
   margin-bottom: 16px;
   color: #333;
+
+  @media (max-width: 768px) {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
 }
 
 .post-meta {
@@ -106,18 +115,27 @@ const goBack = () => {
   color: #666;
   margin-bottom: 20px;
 
+  @media (max-width: 768px) {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
   .post-date {
     margin-right: 20px;
   }
 }
 
 .post-content {
-  // z-index: 1;
   background-color: rgba(255, 255, 255, 0.8);
   padding: 0px 24px 24px;
   font-size: 16px;
   color: #333;
   overflow: auto;
+
+  @media (max-width: 768px) {
+    padding: 0px 16px 16px;
+    font-size: 15px;
+  }
 
   :global(.btn-copy) {
     position: absolute;
@@ -129,6 +147,11 @@ const goBack = () => {
     padding: 4px 8px;
     color: #6b6b6b;
     cursor: pointer;
+
+    @media (max-width: 768px) {
+      font-size: 11px;
+      padding: 3px 6px;
+    }
   }
   :global(.btn-copy:hover) {
     border-color: #666;
@@ -148,6 +171,11 @@ const goBack = () => {
   padding: 20px;
   text-align: right;
   border-radius: 0 0 8px 8px;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    text-align: center;
+  }
 }
 
 .loading {
@@ -157,6 +185,10 @@ const goBack = () => {
   height: 400px;
   font-size: 18px;
   color: #666;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 }
 
 .not-found {
@@ -166,5 +198,9 @@ const goBack = () => {
   height: 400px;
   font-size: 18px;
   color: #666;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 }
 </style>

@@ -9,8 +9,28 @@ import {
   provide,
 } from "vue";
 import { useRouter } from "vue-router";
+import { MenuOutlined } from "@ant-design/icons-vue";
 
 const router = useRouter();
+
+// 接收父组件传递的移动端菜单相关属性
+const props = defineProps({
+  blogPosts: {
+    type: Array,
+    default: () => [],
+  },
+  isMobile: {
+    type: Boolean,
+    default: false,
+  },
+  mobileMenuVisible: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+// 定义emit事件
+const emit = defineEmits(["update:mobileMenuVisible"]);
 
 // 电影名场面句子
 const movieSentences = ref([
@@ -148,14 +168,6 @@ const searchContainerRef = ref(null);
 const currentSentenceIndex = ref(0);
 const blogPosts = ref([]);
 
-// 接收父组件传递的blogPosts
-const props = defineProps({
-  blogPosts: {
-    type: Array,
-    default: () => [],
-  },
-});
-
 // 点击外部隐藏下拉框
 const handleClickOutside = (e) => {
   if (
@@ -214,6 +226,15 @@ const handleBlur = () => {
 
 <template>
   <header class="site-header">
+    <!-- 移动端菜单按钮 -->
+    <div
+      v-if="isMobile"
+      class="mobile-menu-btn"
+      @click="$emit('update:mobileMenuVisible', !mobileMenuVisible)"
+    >
+      <MenuOutlined />
+    </div>
+
     <div class="movie-sentence">
       <span class="sentence">{{
         movieSentences[currentSentenceIndex].sentence
@@ -222,6 +243,8 @@ const handleBlur = () => {
         movieSentences[currentSentenceIndex].movie
       }}</span>
     </div>
+
+    <div v-if="isMobile" class="flex-space"></div>
 
     <div ref="searchContainerRef" class="search-container">
       <input
@@ -262,6 +285,35 @@ const handleBlur = () => {
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
+  height: 64px;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+    padding: 0 12px;
+    justify-content: flex-start;
+  }
+}
+
+// 移动端菜单按钮
+.mobile-menu-btn {
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  margin-right: 12px;
+  z-index: 100;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+// 弹性空间，用于在移动端将搜索框推到右侧
+.flex-space {
+  flex: 1;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
 }
 
 // 电影句子滚动样式
@@ -276,6 +328,10 @@ const handleBlur = () => {
   overflow: hidden;
   text-overflow: ellipsis;
   animation: float-small 4s ease-in-out infinite;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 
   .sentence {
     font-style: italic;
@@ -301,7 +357,21 @@ const handleBlur = () => {
 
 .search-container {
   position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   display: inline-block;
+  width: auto;
+  max-width: calc(100% - 120px);
+
+  @media (max-width: 768px) {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    max-width: calc(100% - 12px);
+    width: 100%;
+  }
 }
 
 .search-input {
@@ -320,6 +390,13 @@ const handleBlur = () => {
   color: #333;
   transition: all 0.3s ease;
   outline: none;
+
+  @media (max-width: 768px) {
+    width: calc(100% - 48px);
+    height: 36px;
+    font-size: 14px;
+    margin-left: 48px;
+  }
 }
 .search-input::placeholder {
   color: rgba(0, 0, 0, 0.6);
@@ -327,6 +404,11 @@ const handleBlur = () => {
 .search-input:hover {
   width: 200px;
   animation: shake 0.5s ease-in-out;
+
+  @media (max-width: 768px) {
+    width: calc(100% - 48px);
+    margin-left: 48px;
+  }
 }
 
 .search-icon {
@@ -337,6 +419,10 @@ const handleBlur = () => {
   font-size: 20px;
   color: rgba(255, 255, 255, 0.8);
   pointer-events: none;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 }
 
 .search-dropdown {
@@ -354,6 +440,13 @@ const handleBlur = () => {
   z-index: 10000;
   pointer-events: auto;
   padding: 8px;
+  left: auto;
+
+  @media (max-width: 768px) {
+    width: 180px;
+    right: 0;
+    left: auto;
+  }
 }
 
 .dropdown-item {
@@ -364,6 +457,11 @@ const handleBlur = () => {
   transition: all 0.3s ease;
   border-radius: 12px;
   margin-bottom: 4px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
 }
 
 .dropdown-item:last-child {
